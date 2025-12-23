@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Typecho博客客户端</string>
+    <string name="title_activity_main">Typecho博客客户端</string>
+    <string name="flutter_preloading">正在加载...</string>
+</resources>

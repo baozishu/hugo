@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@drawable/launch_background>
+        <item name="android:windowContentOverlay">@null>
+        <item name="android:windowFullscreen">true>
+        <item name="android:windowDrawsSystemBarBackgrounds">false>
+    </style>
+    <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@android:color/white>
+    </style>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@android:color/white>
+        <item name="colorPrimaryDark">@android:color/black>
+        <item name="colorAccent">@android:color/holo_blue_light>
+        <item name="android:windowAnimationStyle">@null>
+    </style>
+</resources>
