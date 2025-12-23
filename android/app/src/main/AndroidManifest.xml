@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name="io.flutter.app.FlutterApplication"
         android:label="Typecho博客客户端"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -21,7 +20,7 @@
                       uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            <!-- 这是Flutter嵌入v2的关键配置 -->
+            <!-- Flutter嵌入v2的关键配置 -->
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
