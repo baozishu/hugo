@@ -46,71 +46,72 @@ jobs:
           }' > android/app/src/main/java/com/example/typecho_blog_client/MainActivity.java
           
           # Create android build.gradle with optimizations
-           mkdir -p android/app
-           echo 'plugins {
-               id "com.android.application"
-           }
-           
-           def localProperties = new Properties()
-           def localPropertiesFile = rootProject.file("local.properties")
-           if (localPropertiesFile.exists()) {
-               localPropertiesFile.withReader("UTF-8") { reader ->
-                   localProperties.load(reader)
-               }
-           }
-           
-           def flutterRoot = localProperties.getProperty("flutter.sdk")
-           if (flutterRoot == null) {
-               throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-           }
-           
-           def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
-           if (flutterVersionCode == null) {
-               flutterVersionCode = "1"
-           }
-           
-           def flutterVersionName = localProperties.getProperty("flutter.versionName")
-           if (flutterVersionName == null) {
-               flutterVersionName = "1.0"
-           }
-           
-           apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-           
-           android {
-               namespace "com.example.typecho_blog_client"
-               compileSdkVersion 33
-               
-               defaultConfig {
-                   applicationId "com.example.typecho_blog_client"
-                   minSdkVersion 21
-                   targetSdkVersion 33
-                   versionCode flutterVersionCode.toInteger()
-                   versionName flutterVersionName
-               }
-               
-               buildTypes {
-                   release {
-                       // Enables code shrinking, obfuscation, and optimization for release builds
-                       minifyEnabled true
-                       shrinkResources true
-                       proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-                       
-                       // Enable optimizations for better performance
-                       ndk {
-                           abiFilters "armeabi-v7a", "arm64-v8a"
-                       }
-                   }
-               }
-           }
-           
-           flutter {
-               source "$flutterRoot"
-           }
-           
-           dependencies {
-               implementation "androidx.core:core-ktx:1.7.0"
-               implementation "androidx.appcompat:appcompat:1.5.1"
-           }' > android/app/build.gradle
+           # Create android build.gradle with optimizations
+            mkdir -p android/app
+            echo 'plugins {
+                id "com.android.application"
+            }
+            
+            def localProperties = new Properties()
+            def localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                localPropertiesFile.withReader("UTF-8") { reader ->
+                    localProperties.load(reader)
+                }
+            }
+            
+            def flutterRoot = localProperties.getProperty("flutter.sdk")
+            if (flutterRoot == null) {
+                throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+            }
+            
+            def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+            if (flutterVersionCode == null) {
+                flutterVersionCode = "1"
+            }
+            
+            def flutterVersionName = localProperties.getProperty("flutter.versionName")
+            if (flutterVersionName == null) {
+                flutterVersionName = "1.0"
+            }
+            
+            apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+            
+            android {
+                namespace "com.example.typecho_blog_client"
+                compileSdkVersion 33
+                
+                defaultConfig {
+                    applicationId "com.example.typecho_blog_client"
+                    minSdkVersion 21
+                    targetSdkVersion 33
+                    versionCode flutterVersionCode.toInteger()
+                    versionName flutterVersionName
+                }
+                
+                buildTypes {
+                    release {
+                        // Enables code shrinking, obfuscation, and optimization for release builds
+                        minifyEnabled true
+                        shrinkResources true
+                        proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+                        
+                        // Enable optimizations for better performance
+                        ndk {
+                            abiFilters "armeabi-v7a", "arm64-v8a"
+                        }
+                    }
+                }
+            }
+            
+            flutter {
+                source "$flutterRoot"
+            }
+            
+            dependencies {
+                implementation "androidx.core:core-ktx:1.7.0"
+                implementation "androidx.appcompat:appcompat:1.5.1"
+            }' > android/app/build.gradle
           
           # Create basic proguard rules
           echo '# Flutter ProGuard rules
@@ -193,6 +194,15 @@ jobs:
           
           # 确保gradle-wrapper.properties存在且配置正确
           echo "distributionUrl=https://services.gradle.org/distributions/gradle-7.6.1-bin.zip" > android/gradle/wrapper/gradle-wrapper.properties
+          
+          # 创建gradle.properties文件，不包含已弃用选项
+          cat > android/gradle.properties << 'EOL'
+          org.gradle.jvmargs=-Xmx1536M
+          android.enableJetifier=true
+          android.useAndroidX=true
+          org.gradle.configureondemand=true
+          org.gradle.parallel=true
+          EOL
           
           # 构建APK
           flutter build apk --release --split-per-abi
