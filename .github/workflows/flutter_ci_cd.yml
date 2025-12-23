@@ -121,22 +121,29 @@ jobs:
           -dontwarn io.flutter.embedding.**' > android/app/proguard-rules.pro
           
           # Create settings.gradle for Android project
-          echo 'include ":app"
-          
-          def localProperties = new Properties()
-          def localPropertiesFile = rootProject.file("local.properties")
-          if (localPropertiesFile.exists()) {
-              localPropertiesFile.withReader("UTF-8") { reader ->
-                  localProperties.load(reader)
-              }
-          }
-          
-          def flutterSdkPath = localProperties.getProperty("flutter.sdk")
-          if (flutterSdkPath == null) {
-              throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-          }
-          
-          includeBuild "$flutterSdkPath/packages/flutter_tools/gradle"' > android/settings.gradle
+           echo 'pluginManagement {
+               def flutterSdkPath = { ->
+                   def properties = new Properties()
+                   file("local.properties").withInputStream { properties.load(it) }
+                   def flutterSdkPath = properties.getProperty("flutter.sdk")
+                   assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
+                   return flutterSdkPath
+               }
+               settings.ext.flutterSdkPath = flutterSdkPath()
+
+               includeBuild "$settings.ext.flutterSdkPath/packages/flutter_tools/gradle"
+
+               repositories {
+                   google()
+                   mavenCentral()
+                   gradlePluginPortal()
+               }
+           }
+
+           def flutterSdkPath = settings.ext.flutterSdkPath
+           apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
+
+           include ":app"' > android/settings.gradle
           
           # Create build.gradle for root Android project
           echo 'buildscript {
@@ -180,10 +187,18 @@ jobs:
         run: |
           # 修复gradle-wrapper.jar问题
           rm -f android/gradle/wrapper/gradle-wrapper.jar
+          
           # 确保gradle-wrapper.properties存在且配置正确
           echo "distributionUrl=https://services.gradle.org/distributions/gradle-7.6.1-bin.zip" > android/gradle/wrapper/gradle-wrapper.properties
+          
           # 构建APK
           flutter build apk --release --split-per-abi
+          
+          shell: /usr/bin/bash -e {0}
+          
+          env:
+            FLUTTER_ROOT: /opt/hostedtoolcache/flutter/stable-3.16.5-x64
+            PUB_CACHE: /home/runner/.pub-cache
       
       - name: List build outputs
         run: find build -type f -name "*.apk"
