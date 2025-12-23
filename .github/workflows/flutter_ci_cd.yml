@@ -46,68 +46,71 @@ jobs:
           }' > android/app/src/main/java/com/example/typecho_blog_client/MainActivity.java
           
           # Create android build.gradle with optimizations
-          mkdir -p android/app
-          echo 'apply plugin: "com.android.application"
-          
-          def localProperties = new Properties()
-          def localPropertiesFile = rootProject.file("local.properties")
-          if (localPropertiesFile.exists()) {
-              localPropertiesFile.withReader("UTF-8") { reader ->
-                  localProperties.load(reader)
-              }
-          }
-          
-          def flutterRoot = localProperties.getProperty("flutter.sdk")
-          if (flutterRoot == null) {
-              throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-          }
-          
-          def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
-          if (flutterVersionCode == null) {
-              flutterVersionCode = "1"
-          }
-          
-          def flutterVersionName = localProperties.getProperty("flutter.versionName")
-          if (flutterVersionName == null) {
-              flutterVersionName = "1.0"
-          }
-          
-          apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-          
-          android {
-              compileSdkVersion 33
-              
-              defaultConfig {
-                  applicationId "com.example.typecho_blog_client"
-                  minSdkVersion 21
-                  targetSdkVersion 33
-                  versionCode flutterVersionCode.toInteger()
-                  versionName flutterVersionName
-              }
-              
-              buildTypes {
-                  release {
-                      // Enables code shrinking, obfuscation, and optimization for release builds
-                      minifyEnabled true
-                      shrinkResources true
-                      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-                      
-                      // Enable optimizations for better performance
-                      ndk {
-                          abiFilters 'armeabi-v7a', 'arm64-v8a'
-                      }
-                  }
-              }
-          }
-          
-          flutter {
-              source "$flutterRoot"
-          }
-          
-          dependencies {
-              implementation "androidx.core:core-ktx:1.7.0"
-              implementation "androidx.appcompat:appcompat:1.5.1"
-          }' > android/app/build.gradle
+           mkdir -p android/app
+           echo 'plugins {
+               id "com.android.application"
+           }
+           
+           def localProperties = new Properties()
+           def localPropertiesFile = rootProject.file("local.properties")
+           if (localPropertiesFile.exists()) {
+               localPropertiesFile.withReader("UTF-8") { reader ->
+                   localProperties.load(reader)
+               }
+           }
+           
+           def flutterRoot = localProperties.getProperty("flutter.sdk")
+           if (flutterRoot == null) {
+               throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+           }
+           
+           def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+           if (flutterVersionCode == null) {
+               flutterVersionCode = "1"
+           }
+           
+           def flutterVersionName = localProperties.getProperty("flutter.versionName")
+           if (flutterVersionName == null) {
+               flutterVersionName = "1.0"
+           }
+           
+           apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+           
+           android {
+               namespace "com.example.typecho_blog_client"
+               compileSdkVersion 33
+               
+               defaultConfig {
+                   applicationId "com.example.typecho_blog_client"
+                   minSdkVersion 21
+                   targetSdkVersion 33
+                   versionCode flutterVersionCode.toInteger()
+                   versionName flutterVersionName
+               }
+               
+               buildTypes {
+                   release {
+                       // Enables code shrinking, obfuscation, and optimization for release builds
+                       minifyEnabled true
+                       shrinkResources true
+                       proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+                       
+                       // Enable optimizations for better performance
+                       ndk {
+                           abiFilters "armeabi-v7a", "arm64-v8a"
+                       }
+                   }
+               }
+           }
+           
+           flutter {
+               source "$flutterRoot"
+           }
+           
+           dependencies {
+               implementation "androidx.core:core-ktx:1.7.0"
+               implementation "androidx.appcompat:appcompat:1.5.1"
+           }' > android/app/build.gradle
           
           # Create basic proguard rules
           echo '# Flutter ProGuard rules
@@ -145,38 +148,38 @@ jobs:
 
            include ":app"' > android/settings.gradle
           
-          # Create build.gradle for root Android project
-          echo 'buildscript {
-              ext.kotlin_version = "1.7.10"
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-              
-              dependencies {
-                  classpath "com.android.tools.build:gradle:7.3.0"
-                  classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-              }
-          }
-          
-          allprojects {
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-          }
-          
-          rootProject.buildDir = "../build"
-          subprojects {
-              project.buildDir = "${rootProject.buildDir}/${project.name}"
-          }
-          subprojects {
-              project.evaluationDependsOn(":app")
-          }
-          
-          task clean(type: Delete) {
-              delete rootProject.buildDir
-          }' > android/build.gradle
+           # Create build.gradle for root Android project
+           echo 'buildscript {
+               ext.kotlin_version = "1.7.10"
+               repositories {
+                   google()
+                   mavenCentral()
+               }
+               
+               dependencies {
+                   classpath "com.android.tools.build:gradle:7.3.0"
+                   classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+               }
+           }
+           
+           allprojects {
+               repositories {
+                   google()
+                   mavenCentral()
+               }
+           }
+           
+           rootProject.buildDir = "../build"
+           subprojects {
+               project.buildDir = "${rootProject.buildDir}/${project.name}"
+           }
+           subprojects {
+               project.evaluationDependsOn(":app")
+           }
+           
+           task clean(type: Delete) {
+               delete rootProject.buildDir
+           }' > android/build.gradle
           
           # Create local.properties with Flutter SDK path placeholder
           echo '# This file is automatically generated by flutter pub get'
