@@ -1,0 +1,66 @@
+name: Flutter CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.5'
+          channel: 'stable'
+      
+      - name: Install dependencies
+        run: |
+          flutter pub get
+          flutter doctor -v
+      
+      - name: Run tests
+        run: flutter test
+      
+      - name: Build Android APK
+        run: flutter build apk --release
+      
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  build-ios:
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.5'
+          channel: 'stable'
+      
+      - name: Install dependencies
+        run: |
+          flutter pub get
+          flutter doctor -v
+      
+      - name: Run tests
+        run: flutter test
+      
+      - name: Build iOS
+        run: flutter build ios --release --no-codesign
+      
+      - name: Upload iOS artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-release
+          path: build/ios/iphoneos/Runner.app
