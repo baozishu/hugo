@@ -177,7 +177,13 @@ jobs:
           echo "flutter.sdk=${{ env.FLUTTER_HOME }}" > android/local.properties
       
       - name: Build optimized Android APK
-        run: flutter build apk --release --split-per-abi
+        run: |
+          # 修复gradle-wrapper.jar问题
+          rm -f android/gradle/wrapper/gradle-wrapper.jar
+          # 确保gradle-wrapper.properties存在且配置正确
+          echo "distributionUrl=https://services.gradle.org/distributions/gradle-7.6.1-bin.zip" > android/gradle/wrapper/gradle-wrapper.properties
+          # 使用--no-daemon选项避免Gradle守护进程问题
+          flutter build apk --release --split-per-abi --no-daemon
       
       - name: List build outputs
         run: find build -type f -name "*.apk"

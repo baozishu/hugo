@@ -1,0 +1,71 @@
+# OSX
+#
+.DS_Store
+
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+*.keystore
+!debug.keystore
+
+# Flutter
+#
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Gradle Wrapper - 保留properties和脚本，但排除jar文件
+gradle-wrapper.jar
+
+# VS Code
+#
+.vscode/
+
+# Android build outputs
+build/
+app/build/
+
+# iOS build outputs
+ios/Pods/
+ios/build/
+
+# Temporary files
+*.swp
+*.swo
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
